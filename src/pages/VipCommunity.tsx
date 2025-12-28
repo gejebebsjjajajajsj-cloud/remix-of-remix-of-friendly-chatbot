@@ -48,15 +48,15 @@ const VipCommunity = () => {
 
       setIsLoadingPix(true);
       const { data, error } = await supabase.functions.invoke("sync-pix", {
-        body: {
-          amount: normalizedAmount,
-          description: "Pagamento PIX",
-          client: {
-            name: "Cliente VIP",
-            email: "sem-email@vip.local",
-            cpf: "00000000000",
+          body: {
+            amount: normalizedAmount,
+            description: "Pagamento PIX Comunidade VIP",
+            client: {
+              name: "Cliente VIP",
+              email: "teste+vip@example.com",
+              cpf: "12345678909", // CPF de teste válido apenas para ambiente de desenvolvimento
+            },
           },
-        },
       });
 
       if (error || !data) {
