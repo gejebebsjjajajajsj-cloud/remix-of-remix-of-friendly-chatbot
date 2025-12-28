@@ -19,11 +19,55 @@ const VipCommunity = () => {
   const [pixCode, setPixCode] = useState<string | null>(null);
   const [amount, setAmount] = useState<number>(150);
   const [lastSyncErrorJson, setLastSyncErrorJson] = useState<string | null>(null);
-
+  const [externalId, setExternalId] = useState<string | null>(null);
+  const [isCheckingPayment, setIsCheckingPayment] = useState(false);
+  const [vipToken, setVipToken] = useState<string | null>(null);
+  const [vipDiscordLink, setVipDiscordLink] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Comunidade VIP no Discord | R$ 150/mês";
-  }, []);
+
+    if (!externalId) return;
+
+    let interval: number | undefined;
+
+    const checkStatus = async () => {
+      try {
+        setIsCheckingPayment(true);
+
+        const { data, error } = await supabase.functions.invoke("get-vip-access", {
+          body: { externalId },
+        });
+
+        if (error) {
+          console.error("Erro ao verificar status do pagamento:", error);
+          return;
+        }
+
+        if (data && (data as any).isPaid && (data as any).token && (data as any).discordLink) {
+          setVipToken((data as any).token as string);
+          setVipDiscordLink((data as any).discordLink as string);
+
+          if (interval) {
+            clearInterval(interval);
+          }
+        }
+      } catch (err) {
+        console.error("Erro inesperado ao checar pagamento:", err);
+      } finally {
+        setIsCheckingPayment(false);
+      }
+    };
+
+    interval = window.setInterval(checkStatus, 5000);
+    checkStatus();
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [externalId]);
 
   const pillars = [
     "2 calls AO VIVO por semana no Discord pra destrinchar suas telas, ajustar oferta e destravar sua cabeça.",
@@ -47,16 +91,20 @@ const VipCommunity = () => {
       }
 
       setIsLoadingPix(true);
+      setVipToken(null);
+      setVipDiscordLink(null);
+      setExternalId(null);
+
       const { data, error } = await supabase.functions.invoke("sync-pix", {
-          body: {
-            amount: normalizedAmount,
-            description: "Pagamento PIX Comunidade VIP",
-            client: {
-              name: "Cliente VIP",
-              email: "teste+vip@example.com",
-              cpf: "12345678909", // CPF de teste válido apenas para ambiente de desenvolvimento
-            },
+        body: {
+          amount: normalizedAmount,
+          description: "Pagamento PIX Comunidade VIP",
+          client: {
+            name: "Cliente VIP",
+            email: "teste+vip@example.com",
+            cpf: "12345678909", // CPF de teste válido apenas para ambiente de desenvolvimento
           },
+        },
       });
 
       if (error || !data) {
@@ -69,14 +117,14 @@ const VipCommunity = () => {
         return;
       }
 
-       if ((data as any).error) {
-         console.error("Erro da TriboPay ao gerar Pix:", data);
- 
-         try {
-           setLastSyncErrorJson(JSON.stringify(data, null, 2));
-         } catch {
-           setLastSyncErrorJson(String(data));
-         }
+      if ((data as any).error) {
+        console.error("Erro da TriboPay ao gerar Pix:", data);
+
+        try {
+          setLastSyncErrorJson(JSON.stringify(data, null, 2));
+        } catch {
+          setLastSyncErrorJson(String(data));
+        }
 
         let descricaoErro = (data as any).message as string | undefined;
         try {
@@ -98,14 +146,17 @@ const VipCommunity = () => {
         return;
       }
 
-       setLastSyncErrorJson(null);
-       const pixFromObject = (data as any).pix;
-       const pixCodeFromObject = pixFromObject?.code ?? (data as any).pix_code;
-       setPixCode(pixCodeFromObject);
-       setIsPixModalOpen(true);
+      setLastSyncErrorJson(null);
+      const pixFromObject = (data as any).pix;
+      const pixCodeFromObject = pixFromObject?.code ?? (data as any).pix_code;
+      const externalIdFromObject = (data as any).externalId ?? null;
+
+      setPixCode(pixCodeFromObject);
+      setExternalId(externalIdFromObject);
+      setIsPixModalOpen(true);
       toast({
         title: "Pix gerado com sucesso",
-        description: "Agora é só pagar o Pix para liberar seu acesso ao VIP automáticament.",
+        description: "Agora é só pagar o Pix para liberar seu acesso ao VIP automaticamente.",
       });
     } catch (err) {
       console.error(err);
@@ -320,10 +371,40 @@ const VipCommunity = () => {
               </div>
             )}
 
-             <p className="text-[11px] text-muted-foreground">
-               Assim que o pagamento for confirmado pela TriboPay, o sistema libera seu acesso automaticamente e você recebe o link
-               do servidor VIP no e-mail cadastrado.
-             </p>
+            {externalId && !vipToken && (
+              <p className="text-[11px] text-muted-foreground">
+                Assim que o pagamento for confirmado pela TriboPay, o sistema verifica automaticamente e libera seu acesso ao
+                painel com o link do Discord e seu token exclusivo.
+              </p>
+            )}
+
+            {vipToken && vipDiscordLink && (
+              <div className="mt-4 space-y-3 rounded-2xl border border-border/70 bg-muted/40 p-4 text-xs sm:text-sm">
+                <p className="font-medium text-foreground">Pronto! Seu acesso VIP foi liberado.</p>
+                <p>
+                  <span className="font-semibold">1.</span> Entre no servidor clicando no link abaixo:
+                </p>
+                <p>
+                  <a
+                    href={vipDiscordLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 text-primary"
+                  >
+                    Acessar servidor VIP no Discord
+                  </a>
+                </p>
+                <p>
+                  <span className="font-semibold">2.</span> Use este token dentro do bot para ativar seu acesso:
+                </p>
+                <p className="break-all rounded-md bg-background px-3 py-2 font-mono text-[11px]">
+                  {vipToken}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Guarde este token com cuidado. Ele é único e será invalidado pelo bot assim que for utilizado.
+                </p>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

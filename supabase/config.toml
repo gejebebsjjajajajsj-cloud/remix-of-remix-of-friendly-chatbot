@@ -2,3 +2,6 @@ project_id = "ysxtcjvskdedgiqdiqsq"
 
 [functions.discord-validate-token]
 verify_jwt = false
+
+[functions.get-vip-access]
+verify_jwt = false
