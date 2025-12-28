@@ -25,7 +25,7 @@ const Index = () => {
           </div>
           <p className="banner-pill vip-chip mb-2">link na bio diferente de tudo</p>
           <h1 className="font-cartoon text-3xl sm:text-4xl text-foreground mb-1">
-            Seu Nome {/* troque depois pelo seu nome/brand */}
+            Alta Cúpula
           </h1>
           <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
             Clica nos 3 Pontos no Canto Superior Direito e após isso em Abrir No Navegador.
