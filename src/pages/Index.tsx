@@ -3,6 +3,7 @@ import { ArrowRight, Crown, MessageCircle } from "lucide-react";
 import { useEffect } from "react";
 import vipBanner from "@/assets/vip-community-banner.jpg";
 import freeBanner from "@/assets/free-community-banner.png";
+import profileAvatar from "@/assets/profile-avatar.png";
 
 const Index = () => {
   useEffect(() => {
@@ -15,7 +16,7 @@ const Index = () => {
         <header className="flex flex-col items-center text-center mb-6">
           <div className="avatar-ring hover-scale signature-glow overflow-hidden">
             <img
-              src="/placeholder.svg"
+              src={profileAvatar}
               alt="Foto de perfil da sua marca"
               className="h-full w-full rounded-full object-cover"
               loading="lazy"
