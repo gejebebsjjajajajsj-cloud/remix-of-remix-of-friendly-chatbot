@@ -60,7 +60,7 @@ const Index = () => {
           <div className="space-y-1">
             <p className="text-xs sm:text-sm font-medium text-foreground">nossa comunidade grátis no WhatsApp</p>
             <a
-              href="https://wa.me/5500000000000" // troque pelo seu número/linha oficial
+              href="https://chat.whatsapp.com/IZPZMZrobqC4o7CC5nVhbu"
               target="_blank"
               rel="noopener noreferrer"
               className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl"
