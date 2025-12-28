@@ -11,6 +11,7 @@ import vipBanner from "@/assets/vip-community-banner.jpg";
 import nichoHotImage from "@/assets/nicho-hot.webp";
 import ratariasDigitalImage from "@/assets/ratarias-digital.webp";
 import vipPanelPenguin from "@/assets/vip-panel-penguin.png";
+import discordCommunityBanner from "@/assets/discord-community-banner.png";
 
 const VipCommunity = () => {
   const { toast } = useToast();
@@ -273,6 +274,20 @@ const VipCommunity = () => {
               aria-label="Painel de inscrição"
               className="space-y-4 rounded-2xl border border-border/80 bg-background/95 p-5 shadow-[var(--shadow-glow)]"
             >
+              <a
+                href="https://discord.gg/zbkNdVqYhf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block overflow-hidden rounded-2xl border border-border/70 bg-muted/40 hover-scale"
+              >
+                <img
+                  src={discordCommunityBanner}
+                  alt="Banner da comunidade Discord com mascote pinguim"
+                  className="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+              </a>
+
               <div className="space-y-3">
                 <p className="inline-flex items-center gap-2 rounded-full bg-muted/60 px-3 py-1 text-[11px] font-medium text-muted-foreground">
                   <Sparkles className="h-3.5 w-3.5 text-primary" />
