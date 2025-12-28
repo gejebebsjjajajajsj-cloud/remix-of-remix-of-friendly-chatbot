@@ -3,7 +3,7 @@ import { ArrowRight, Crown, MessageCircle } from "lucide-react";
 import { useEffect } from "react";
 import vipBanner from "@/assets/vip-community-banner.jpg";
 import freeBanner from "@/assets/free-community-banner.png";
-import profileAvatar from "@/assets/profile-avatar.png";
+import profileAvatar from "@/assets/profile-cat-gamer.jpg";
 import discordCommunityBanner from "@/assets/discord-community-banner.png";
 
 const Index = () => {
@@ -23,7 +23,7 @@ const Index = () => {
               loading="lazy"
             />
           </div>
-          <p className="banner-pill vip-chip mb-2">link na bio diferente de tudo</p>
+          <p className="banner-pill vip-chip mb-2">vem participar do nosso network</p>
           <h1 className="font-cartoon text-3xl sm:text-4xl text-foreground mb-1">
             Alta Cúpula
           </h1>
