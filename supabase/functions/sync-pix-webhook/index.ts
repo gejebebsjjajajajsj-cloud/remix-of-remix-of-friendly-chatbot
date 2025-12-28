@@ -14,11 +14,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
-type SyncWebhookPayload = {
-  idTransaction: string;
-  amount: number;
+type TriboPayWebhookPayload = {
+  externalId: string;
   status: string;
-  [key: string]: any;
+  amount: number; // em centavos
+  endToEndId?: string;
+  [key: string]: unknown;
 };
 
 serve(async (req) => {
@@ -27,23 +28,24 @@ serve(async (req) => {
   }
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Método não suportado" }), {
+    return new Response(JSON.stringify({ error: "METHOD_NOT_ALLOWED" }), {
       status: 405,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   try {
-    const payload = await req.json() as SyncWebhookPayload;
+    const payload = (await req.json()) as TriboPayWebhookPayload;
 
-    console.log("Webhook Sync recebido:", {
-      idTransaction: payload.idTransaction,
+    console.log("Webhook TriboPay recebido:", {
+      externalId: payload.externalId,
       status: payload.status,
       amount: payload.amount,
+      endToEndId: payload.endToEndId,
     });
 
-    if (!payload.idTransaction || !payload.amount || !payload.status) {
-      console.error("Webhook inválido", payload);
+    if (!payload.externalId || !payload.status || typeof payload.amount !== "number") {
+      console.error("Webhook inválido da TriboPay", payload);
       return new Response(JSON.stringify({ received: true }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -53,40 +55,41 @@ serve(async (req) => {
     const { data: tx, error: txError } = await supabase
       .from("pix_transactions")
       .select("id, amount, client_email")
-      .eq("sync_id_transaction", payload.idTransaction)
+      .eq("sync_id_transaction", payload.externalId)
       .maybeSingle();
 
     if (txError) {
-      console.error("Erro ao buscar transação:", txError);
+      console.error("Erro ao buscar transação pelo externalId:", txError);
     }
 
     if (!tx) {
-      console.error("Transação não encontrada para idTransaction", payload.idTransaction);
+      console.error("Transação não encontrada para externalId", payload.externalId);
       return new Response(JSON.stringify({ received: true }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    if (Number(tx.amount) !== Number(payload.amount)) {
+    const expectedCents = Math.round(Number(tx.amount) * 100);
+    if (expectedCents !== Number(payload.amount)) {
       console.error("Valor divergente, não liberar acesso", {
-        esperado: tx.amount,
-        recebido: payload.amount,
-        idTransaction: payload.idTransaction,
+        esperadoCentavos: expectedCents,
+        recebidoCentavos: payload.amount,
+        externalId: payload.externalId,
       });
     }
 
-    const statusUpper = payload.status.toUpperCase();
-    const isPaidStatus = ["COMPLETED", "PAID", "APPROVED"].includes(statusUpper);
+    const statusLower = payload.status.toLowerCase();
+    const isPaidStatus = statusLower === "paid" || statusLower === "approved";
 
     const { error: updateError } = await supabase
       .from("pix_transactions")
       .update({
-        status: statusUpper,
+        status: payload.status.toUpperCase(),
         raw_webhook: payload,
         paid_at: isPaidStatus ? new Date().toISOString() : null,
       })
-      .eq("sync_id_transaction", payload.idTransaction);
+      .eq("sync_id_transaction", payload.externalId);
 
     if (updateError) {
       console.error("Erro ao atualizar transação:", updateError);
@@ -119,7 +122,7 @@ serve(async (req) => {
         console.log("Acesso VIP já existia, não duplicar", tx.client_email);
       }
     } else {
-      console.log("Status não pago, apenas registrando no histórico", statusUpper);
+      console.log("Status não pago/aprovado, apenas registrando no histórico", payload.status);
     }
 
     return new Response(JSON.stringify({ received: true }), {
@@ -127,7 +130,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Erro na função sync-pix-webhook:", error);
+    console.error("Erro na função sync-pix-webhook (TriboPay):", error);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
