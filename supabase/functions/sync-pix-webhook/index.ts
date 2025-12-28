@@ -118,19 +118,36 @@ serve(async (req) => {
         } else {
           console.log("Acesso VIP liberado para", tx.client_email);
 
-          // Gera um token único para o Discord vinculado a essa transação
-          const token = crypto.randomUUID();
+          // Em vez de gerar um token aleatório, usamos um dos 1000 tokens pré-carregados
+          const { data: availableToken, error: availableTokenError } = await supabase
+            .from("vip_tokens")
+            .select("id, token")
+            .is("pix_transaction_id", null)
+            .order("id", { ascending: true })
+            .limit(1)
+            .maybeSingle();
 
-          const { error: insertTokenError } = await supabase.from("vip_tokens").insert({
-            pix_transaction_id: tx.id,
-            client_email: tx.client_email,
-            token,
-          });
+          if (availableTokenError) {
+            console.error("Erro ao buscar token VIP disponível:", availableTokenError);
+          }
 
-          if (insertTokenError) {
-            console.error("Erro ao criar token VIP para Discord:", insertTokenError);
+          if (!availableToken) {
+            console.error("Não há mais tokens VIP disponíveis na tabela vip_tokens.");
           } else {
-            console.log("Token VIP gerado para Discord para", tx.client_email);
+            const { error: updateTokenError } = await supabase
+              .from("vip_tokens")
+              .update({
+                pix_transaction_id: tx.id,
+                client_email: tx.client_email,
+                status: "used",
+              })
+              .eq("id", availableToken.id);
+
+            if (updateTokenError) {
+              console.error("Erro ao vincular token VIP à transação:", updateTokenError);
+            } else {
+              console.log("Token VIP vinculado à transação para", tx.client_email);
+            }
           }
         }
       } else {
