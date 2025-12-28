@@ -102,7 +102,7 @@ export type Database = {
           client_email: string | null
           created_at: string
           id: number
-          pix_transaction_id: number
+          pix_transaction_id: number | null
           status: string
           token: string
           used_at: string | null
@@ -111,7 +111,7 @@ export type Database = {
           client_email?: string | null
           created_at?: string
           id?: number
-          pix_transaction_id: number
+          pix_transaction_id?: number | null
           status?: string
           token: string
           used_at?: string | null
@@ -120,7 +120,7 @@ export type Database = {
           client_email?: string | null
           created_at?: string
           id?: number
-          pix_transaction_id?: number
+          pix_transaction_id?: number | null
           status?: string
           token?: string
           used_at?: string | null
