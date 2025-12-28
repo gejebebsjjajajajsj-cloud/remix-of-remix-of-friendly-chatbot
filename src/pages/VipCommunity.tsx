@@ -69,14 +69,14 @@ const VipCommunity = () => {
         return;
       }
 
-      if ((data as any).error) {
-        console.error("Erro da Sync ao gerar Pix:", data);
-
-        try {
-          setLastSyncErrorJson(JSON.stringify(data, null, 2));
-        } catch {
-          setLastSyncErrorJson(String(data));
-        }
+       if ((data as any).error) {
+         console.error("Erro da TriboPay ao gerar Pix:", data);
+ 
+         try {
+           setLastSyncErrorJson(JSON.stringify(data, null, 2));
+         } catch {
+           setLastSyncErrorJson(String(data));
+         }
 
         let descricaoErro = (data as any).message as string | undefined;
         try {
@@ -98,9 +98,11 @@ const VipCommunity = () => {
         return;
       }
 
-      setLastSyncErrorJson(null);
-      setPixCode((data as any).pix_code);
-      setIsPixModalOpen(true);
+       setLastSyncErrorJson(null);
+       const pixFromObject = (data as any).pix;
+       const pixCodeFromObject = pixFromObject?.code ?? (data as any).pix_code;
+       setPixCode(pixCodeFromObject);
+       setIsPixModalOpen(true);
       toast({
         title: "Pix gerado com sucesso",
         description: "Agora é só pagar o Pix para liberar seu acesso ao VIP automáticament.",
@@ -244,20 +246,6 @@ const VipCommunity = () => {
                 </span>
               </div>
 
-              <div className="mt-3 space-y-1">
-                <Label htmlFor="pix-amount" className="text-xs text-muted-foreground">
-                  Valor da assinatura (mínimo R$ 50,00)
-                </Label>
-                <Input
-                  id="pix-amount"
-                  type="number"
-                  min={50}
-                  step={10}
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                  className="h-9 text-sm"
-                />
-              </div>
               </div>
 
 
@@ -332,10 +320,10 @@ const VipCommunity = () => {
               </div>
             )}
 
-            <p className="text-[11px] text-muted-foreground">
-              Assim que o pagamento for confirmado pela Sync, o sistema libera seu acesso automaticamente e você recebe o link
-              do servidor VIP no e-mail informado.
-            </p>
+             <p className="text-[11px] text-muted-foreground">
+               Assim que o pagamento for confirmado pela TriboPay, o sistema libera seu acesso automaticamente e você recebe o link
+               do servidor VIP no e-mail cadastrado.
+             </p>
           </div>
 
           <DialogFooter>
