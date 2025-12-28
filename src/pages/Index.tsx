@@ -27,8 +27,7 @@ const Index = () => {
             Seu Nome {/* troque depois pelo seu nome/brand */}
           </h1>
           <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
-            Crio conteúdos todo santo dia para te tirar do amadorismo e colocar você em um jogo profissional de
-            resultados. Aqui embaixo estão as portas de entrada para a minha comunidade.
+            Clica nos 3 Pontos no Canto Superior Direito e após isso em Abrir No Navegador.
           </p>
         </header>
 
