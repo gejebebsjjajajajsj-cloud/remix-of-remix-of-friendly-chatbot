@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design system: cores, gradientes, fontes e animações globais (sempre em HSL) */
+
+@layer base {
+  :root {
+    /* Base */
+    --background: 0 0% 0%; /* fundo preto para combinar com os banners */
+    --foreground: 260 20% 96%;
+
+    --card: 0 0% 0%;
+    --card-foreground: 260 20% 96%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 260 20% 96%;
+
+    /* Primárias em vibe neon/cartoon (apenas detalhes, fundo continua preto) */
+    --primary: 280 90% 63%; /* roxo neon em botões/detalhes */
+    --primary-foreground: 260 20% 8%;
+
+    --secondary: 195 100% 48%; /* ciano vibrante para chips */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 0 0% 7%;
+    --muted-foreground: 260 20% 72%;
+
+    --accent: 48 100% 60%; /* amarelo quente para detalhes */
+    --accent-foreground: 260 30% 12%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 280 90% 63%;
+
+    --radius: 1.25rem;
+
+    /* Sidebar (não muito usada aqui, mas mantendo coerência) */
+    --sidebar-background: 260 40% 7%;
+    --sidebar-foreground: 260 20% 96%;
+    --sidebar-primary: 280 90% 63%;
+    --sidebar-primary-foreground: 260 20% 8%;
+    --sidebar-accent: 260 32% 14%;
+    --sidebar-accent-foreground: 260 20% 96%;
+    --sidebar-border: 260 28% 26%;
+    --sidebar-ring: 280 90% 63%;
+
+    /* Gradientes e sombras semânticas */
+    --gradient-hero: 135deg, hsl(280 90% 63%), hsl(195 100% 48%);
+    --gradient-banner: 135deg, hsl(280 90% 63%), hsl(48 100% 60%);
+    --shadow-soft: 0 18px 45px hsl(260 70% 5% / 0.65);
+    --shadow-glow: 0 0 40px hsl(280 90% 63% / 0.65);
+  }
+
+  .dark {
+    /* Mantém a mesma identidade, só ajusta contraste */
+    --background: 0 0% 0%;
+    --foreground: 260 20% 96%;
+
+    --card: 0 0% 0%;
+    --card-foreground: 260 20% 96%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 260 20% 96%;
+
+    --primary: 280 90% 68%;
+    --primary-foreground: 260 20% 8%;
+
+    --secondary: 195 100% 52%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 0 0% 6%;
+    --muted-foreground: 260 20% 72%;
+
+    --accent: 48 100% 64%;
+    --accent-foreground: 260 30% 10%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 280 90% 68%;
+
+    --sidebar-background: 260 40% 4%;
+    --sidebar-foreground: 260 20% 96%;
+    --sidebar-primary: 280 90% 68%;
+    --sidebar-primary-foreground: 260 20% 8%;
+    --sidebar-accent: 260 32% 12%;
+    --sidebar-accent-foreground: 260 20% 96%;
+    --sidebar-border: 260 28% 26%;
+    --sidebar-ring: 280 90% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Baloo 2", system-ui, sans-serif;
+    letter-spacing: 0.01em;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen w-full flex items-start justify-center px-4 py-6 sm:px-6 lg:px-8 bg-background;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-shell::before,
+  .page-shell::after {
+    content: none;
+  }
+
+  .bio-card {
+    @apply relative w-full max-w-md sm:max-w-lg rounded-[1.75rem] border border-border/70 bg-background/95 p-6 sm:p-8 shadow-[var(--shadow-soft)] backdrop-blur-xl;
+  }
+
+  .avatar-ring {
+    @apply relative mx-auto mb-4 h-28 w-28 sm:h-32 sm:w-32 rounded-full border-4 border-primary/70 bg-muted shadow-[var(--shadow-glow)];
+  }
+
+  .avatar-ring::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 9999px;
+    background: conic-gradient(from 180deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary)));
+    opacity: 0.8;
+    z-index: -1;
+  }
+
+.banner-card {
+    @apply relative flex w-full items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card/80 px-5 py-4 shadow-[var(--shadow-soft)] transition-transform transition-shadow duration-300 ease-out cursor-pointer;
+  }
+
+  .banner-card:hover {
+    transform: translateY(-3px) rotate(-0.5deg);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .banner-pill {
+    @apply inline-flex items-center rounded-full bg-card/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground/90;
+  }
+
+  .vip-chip {
+    @apply bg-primary/15 text-primary;
+  }
+
+  .free-chip {
+    @apply bg-secondary/20 text-secondary-foreground;
+  }
+
+  .signature-glow {
+    box-shadow: 0 0 0 1px hsl(280 90% 63% / 0.2), 0 0 40px hsl(280 90% 63% / 0.4);
+  }
+}
+
+@layer utilities {
+  /* Hover scale util da documentação */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  /* Link com underline animado */
+  .story-link {
+    @apply relative inline-block;
+  }
+
+  .story-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    transform-origin: bottom right;
+    transform: scaleX(0);
+    background-color: hsl(var(--primary));
+    transition: transform 0.3s ease;
+  }
+
+  .story-link:hover::after {
+    transform-origin: bottom left;
+    transform: scaleX(1);
+  }
+
+  .pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
