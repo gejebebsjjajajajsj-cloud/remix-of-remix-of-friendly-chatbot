@@ -97,6 +97,44 @@ export type Database = {
           },
         ]
       }
+      vip_tokens: {
+        Row: {
+          client_email: string | null
+          created_at: string
+          id: number
+          pix_transaction_id: number
+          status: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          client_email?: string | null
+          created_at?: string
+          id?: number
+          pix_transaction_id: number
+          status?: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          client_email?: string | null
+          created_at?: string
+          id?: number
+          pix_transaction_id?: number
+          status?: string
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_tokens_pix_transaction_id_fkey"
+            columns: ["pix_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "pix_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
