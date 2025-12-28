@@ -80,7 +80,7 @@ const Index = () => {
           <div className="space-y-1">
             <p className="text-xs sm:text-sm font-medium text-foreground">comunidade exclusiva no Discord</p>
             <a
-              href="https://chat.whatsapp.com/IZPZMZrobqC4o7CC5nVhbu"
+              href="https://discord.gg/zbkNdVqYhf"
               target="_blank"
               rel="noopener noreferrer"
               className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl"
