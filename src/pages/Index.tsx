@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import vipBanner from "@/assets/vip-community-banner.jpg";
 import freeBanner from "@/assets/free-community-banner.png";
 import profileAvatar from "@/assets/profile-avatar.png";
+import discordCommunityBanner from "@/assets/discord-community-banner.png";
 
 const Index = () => {
   useEffect(() => {
@@ -68,6 +69,26 @@ const Index = () => {
                 <img
                   src={freeBanner}
                   alt="Banner da Comunidade Free no WhatsApp"
+                  className="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+              </article>
+            </a>
+          </div>
+
+          {/* Comunidade Discord - link direto para o servidor */}
+          <div className="space-y-1">
+            <p className="text-xs sm:text-sm font-medium text-foreground">comunidade exclusiva no Discord</p>
+            <a
+              href="https://discord.gg/zbkNdVqYhf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl"
+            >
+              <article className="banner-card overflow-hidden p-0">
+                <img
+                  src={discordCommunityBanner}
+                  alt="Banner da Comunidade Discord com mascote pinguim"
                   className="w-full h-auto object-cover"
                   loading="lazy"
                 />
