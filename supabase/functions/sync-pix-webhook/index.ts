@@ -117,6 +117,21 @@ serve(async (req) => {
           console.error("Erro ao criar acesso VIP:", insertAccessError);
         } else {
           console.log("Acesso VIP liberado para", tx.client_email);
+
+          // Gera um token único para o Discord vinculado a essa transação
+          const token = crypto.randomUUID();
+
+          const { error: insertTokenError } = await supabase.from("vip_tokens").insert({
+            pix_transaction_id: tx.id,
+            client_email: tx.client_email,
+            token,
+          });
+
+          if (insertTokenError) {
+            console.error("Erro ao criar token VIP para Discord:", insertTokenError);
+          } else {
+            console.log("Token VIP gerado para Discord para", tx.client_email);
+          }
         }
       } else {
         console.log("Acesso VIP já existia, não duplicar", tx.client_email);
