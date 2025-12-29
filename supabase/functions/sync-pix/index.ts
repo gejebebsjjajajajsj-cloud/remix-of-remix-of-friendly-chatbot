@@ -202,8 +202,10 @@ serve(async (req) => {
       throw new Error("TriboPay não retornou o código PIX (pix.code)");
     }
 
+    const syncId = data.externalId || externalId || data.id;
+
     const { error: insertError } = await supabase.from("pix_transactions").insert({
-      sync_id_transaction: data.externalId,
+      sync_id_transaction: syncId,
       status: data.status?.toUpperCase?.() || "PENDING",
       amount: normalizedAmount,
       description: body.description ?? "Pagamento via PIX (TriboPay)",
