@@ -18,7 +18,7 @@ const VipCommunity = () => {
   const [isPixModalOpen, setIsPixModalOpen] = useState(false);
   const [isLoadingPix, setIsLoadingPix] = useState(false);
   const [pixCode, setPixCode] = useState<string | null>(null);
-  const [amount, setAmount] = useState<number>(150);
+  const [amount, setAmount] = useState<number>(2);
   const [lastSyncErrorJson, setLastSyncErrorJson] = useState<string | null>(null);
   const [externalId, setExternalId] = useState<string | null>(null);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
@@ -26,7 +26,7 @@ const VipCommunity = () => {
   const [vipDiscordLink, setVipDiscordLink] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Comunidade VIP no Discord | R$ 150/mês";
+    document.title = "Comunidade VIP no Discord | R$ 2/mês";
 
     if (!externalId) return;
 
