@@ -53,26 +53,6 @@ const Index = () => {
             </a>
           </div>
 
-          {/* Comunidade gratuita - link externo WhatsApp */}
-          <div className="space-y-1">
-            <p className="text-xs sm:text-sm font-medium text-foreground">nossa comunidade grátis no WhatsApp</p>
-            <a
-              href="https://chat.whatsapp.com/Cy0smHAbjECEFv8BYj0Ipp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl"
-            >
-              <article className="banner-card overflow-hidden p-0">
-                <img
-                  src={freeBanner}
-                  alt="Banner da Comunidade Free no WhatsApp"
-                  className="w-full h-auto object-cover"
-                  loading="lazy"
-                />
-              </article>
-            </a>
-          </div>
-
           {/* Comunidade Discord - link direto para o servidor */}
           <div className="space-y-1">
             <p className="text-xs sm:text-sm font-medium text-foreground">comunidade exclusiva no Discord</p>
