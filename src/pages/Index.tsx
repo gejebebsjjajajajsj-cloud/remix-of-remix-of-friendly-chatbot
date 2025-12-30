@@ -3,7 +3,7 @@ import { ArrowRight, Crown, MessageCircle } from "lucide-react";
 import { useEffect } from "react";
 import vipBanner from "@/assets/vip-community-banner.jpg";
 import freeBanner from "@/assets/free-community-banner.png";
-import profileAvatar from "@/assets/profile-cat-gamer.jpg";
+import profileAvatar from "@/assets/profile-penguin-detective.jpg";
 import discordCommunityBanner from "@/assets/discord-community-banner.png";
 
 const Index = () => {
